@@ -1,0 +1,3 @@
+Conway's Game Of Life written in C++ using SDL.
+
+TODO: Better documentation, multithreading, many others...

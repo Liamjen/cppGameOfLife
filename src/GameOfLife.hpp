@@ -41,6 +41,8 @@ class GameOfLife
         std::vector<struct Point>* currentToCheck;
         std::vector<struct Point>* nextToCheck;
 
+        std::thread clearNextGridThread; 
+
         void populateNextToCheck(struct Point* p);
 
         size_t getNeighborCount(struct Point* p);

@@ -17,9 +17,10 @@ int main(int argc, char* args[])
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         return 1;
    
-    SDL_Window *window = SDL_CreateWindow("Game Of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED |SDL_RENDERER_PRESENTVSYNC);
+    SDL_Window *window = SDL_CreateWindow("Game Of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH * renderScale, SCREEN_HEIGHT * renderScale, SDL_WINDOW_OPENGL);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event event;
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH * renderScale, SCREEN_HEIGHT * renderScale);
     SDL_RenderSetScale(renderer, renderScale, renderScale);
     bool running = true;
 

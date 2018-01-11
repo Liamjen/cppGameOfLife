@@ -46,17 +46,18 @@ GameOfLife::GameOfLife(size_t width, size_t height)
         this->nextGrid[i] = new struct Cell[height];
     }
 
-    //All cells initialized as dead in the back grid
+    //Initialize all cells in next grid
     for(int i = 0; i < width; i++)
     {
         for(int j = 0; j < height; j++)
         {
             struct Cell c;
             this->nextGrid[i][j] = c;
-            this->nextGrid[i][j].alive = false;
-            this->nextGrid[i][j].inVector = false;
         }
     }
+
+    //All Cells in next grid start as dead
+    this->clearNextGridThread = std::thread(&GameOfLife::clearNextGrid, this);
 }
 
 /*
@@ -71,15 +72,16 @@ void GameOfLife::clearNextGrid()
         for(int j = 0; j < this->height; j++)
         {
             this->nextGrid[i][j].alive = false;
+            this->nextGrid[i][j].inVector = false;
         }
     }
 }
 
 void GameOfLife::nextGeneration()
 {
-    //TODO: Rethink this... Not sure how to multithread this anymore
-    std::thread clearNextGridThread(&GameOfLife::clearNextGrid, this);
-    clearNextGridThread.join();
+    //Make sure clearNextGridThread has finished before writing to
+    //nextGrid
+    this->clearNextGridThread.join();
     while(this->currentToCheck->size() > 0)
     {
         struct Point* p = &this->currentToCheck->back();
@@ -108,10 +110,12 @@ void GameOfLife::nextGeneration()
 
         this->currentToCheck->pop_back();
     }
-
-    this->clearCurrentCellInVector();
-    //Make sure the nextGrid is clear before swapping pointers
+    
     this->swapCurrentAndNextPointers();
+    this->clearNextGridThread = std::thread(&GameOfLife::clearNextGrid, this);
+    //this->clearCurrentCellInVector();
+    //Make sure the nextGrid is clear before swapping pointers
+    
 }
 
 void GameOfLife::clearCurrentCellInVector()

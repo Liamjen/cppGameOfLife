@@ -8,9 +8,9 @@
 int main(int argc, char* args[])
 {
     //TODO: Temporary size variables
-    int SCREEN_WIDTH = 1000;
-    int SCREEN_HEIGHT = 1000;
-    int renderScale = 1;
+    int SCREEN_WIDTH = 200;
+    int SCREEN_HEIGHT = 200;
+    int renderScale = 4;
 
     GameOfLife* gameOfLife = new GameOfLife(SCREEN_WIDTH, SCREEN_HEIGHT);
     
@@ -24,9 +24,14 @@ int main(int argc, char* args[])
     SDL_RenderSetScale(renderer, renderScale, renderScale);
     bool running = true;
 
+    bool paused = false;
+    //Delay in ms to next generation
+    int delay = 10;
+
     //Main SDL loop
     while(running)
     {
+        SDL_Delay(delay);
         while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)
@@ -38,14 +43,30 @@ int main(int argc, char* args[])
                     case SDLK_ESCAPE:
                         running = false;
                         break;
+                    case SDLK_p:
+                        paused = !paused;
+                        break;
+                    case SDLK_RIGHT:
+                        gameOfLife->nextGeneration();
+                        break;
+                    case SDLK_UP:
+                        delay += 10;
+                        break;
+                    case SDLK_DOWN:
+                        delay -= 10;
+                        if(delay < 0)
+                            delay = 0;
+                        break;
                     }
                 }
             }
 
+        if(!paused)
+            gameOfLife->nextGeneration();
+        
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        gameOfLife->nextGeneration();
         Cell** grid = gameOfLife->getGrid();
         for(int i = 0; i < SCREEN_WIDTH; i++)
             for(int j = 0; j < SCREEN_HEIGHT; j++)
@@ -57,6 +78,7 @@ int main(int argc, char* args[])
             }
 
         SDL_RenderPresent(renderer);
+        
     }
     
     //End program

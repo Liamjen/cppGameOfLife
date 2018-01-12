@@ -32,7 +32,7 @@ GameOfLife::GameOfLife(size_t width, size_t height)
             p.x = i;
             p.y = j;
             this->currentGrid[i][j].alive = true;
-            if(rand() % 3 == 0)
+            if(rand() % 4 == 0)
                 this->currentGrid[i][j].alive = false;
             currentToCheck->push_back(p);
         }

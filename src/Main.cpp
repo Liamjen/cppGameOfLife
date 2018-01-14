@@ -2,15 +2,42 @@
 #define SDL_MAIN_HANDLED
 
 #include <iostream>
+#include <string>
 #include "SDL2/SDL.h"
 #include "GameOfLife.hpp"
 
 int main(int argc, char* args[])
 {
-    //TODO: Temporary size variables
-    int SCREEN_WIDTH = 200;
-    int SCREEN_HEIGHT = 200;
-    int renderScale = 4;
+    int SCREEN_WIDTH, SCREEN_HEIGHT, renderScale;
+
+    //Get the last 3 arguments to set screen size and render scale
+    bool defaultSize = false; 
+    for(int i = argc - 3; i < argc; i++)
+    {
+        if(i <= 0)
+        {
+            defaultSize = true;
+            break;
+        }
+        else if(!std::stoi(args[i]))
+        {
+            defaultSize = true;
+            break;
+        }
+    }
+
+    if(defaultSize)
+    {
+        SCREEN_WIDTH = 200;
+        SCREEN_HEIGHT = 200;
+        renderScale = 4;
+    }
+    else
+    {
+        SCREEN_WIDTH = std::stoi(args[argc - 3]);    
+        SCREEN_HEIGHT = std::stoi(args[argc - 2]);    
+        renderScale = std::stoi(args[argc - 1]);    
+    }
 
     GameOfLife* gameOfLife = new GameOfLife(SCREEN_WIDTH, SCREEN_HEIGHT);
     

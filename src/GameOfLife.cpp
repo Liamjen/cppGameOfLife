@@ -77,6 +77,13 @@ void GameOfLife::clearNextGrid()
     }
 }
 
+/*
+ * Main loop of the GameOfLife model.
+ * Makes sure the nextGrid is ready to be written to and
+ * does all the normal calculations of Conways Game Of Life
+ * as well as swapping the pointers for currentGrid and nextGrid
+ * as well as their vector list of cells to check next iteration.
+ */
 void GameOfLife::nextGeneration()
 {
     //Make sure clearNextGridThread has finished before writing to
@@ -113,22 +120,17 @@ void GameOfLife::nextGeneration()
     
     this->swapCurrentAndNextPointers();
     this->clearNextGridThread = std::thread(&GameOfLife::clearNextGrid, this);
-    //this->clearCurrentCellInVector();
-    //Make sure the nextGrid is clear before swapping pointers
-    
 }
 
-void GameOfLife::clearCurrentCellInVector()
-{
-    for(int i = 0; i < this->width; i++)
-    {
-        for(int j = 0; j < this->height; j++)
-        {
-            this->nextGrid[i][j].inVector = false;
-        }
-    }
-}
-
+/*
+ * Based on Point* p argument, populate the nextToCheck vector list.
+ * This function populates nextToCheck with the current point as well
+ * as all the points 8 adjacent neighbors, as the status of those
+ * cells are the only ones that need to be checked for the next iteration.
+ *
+ * Here is where struct Cell's inVector bool comes into play, as it lets
+ * the list know not to add the same cell twice to be checked.
+ */
 void GameOfLife::populateNextToCheck(struct Point* p)
 {
 

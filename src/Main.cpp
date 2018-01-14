@@ -58,7 +58,9 @@ int main(int argc, char* args[])
     //Main SDL loop
     while(running)
     {
-        SDL_Delay(delay);
+        if(delay > 0)
+            SDL_Delay(delay);
+
         while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)

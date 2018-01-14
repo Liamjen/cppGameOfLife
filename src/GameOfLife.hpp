@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+#include <mingw.thread.h>
+#else
 #include <thread>
+#endif
 
 struct Cell
 {
